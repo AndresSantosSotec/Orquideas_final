@@ -13,6 +13,11 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
+    {
+        title: 'Orquídeas',
+        href: '/registro_orquideas',
+        icon: Folder,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
