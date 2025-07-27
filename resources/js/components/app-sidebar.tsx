@@ -15,7 +15,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Orquídeas',
-        href: '/registro_orquideas',
+        href: '/orquideas',
         icon: Folder,
     },
 ];

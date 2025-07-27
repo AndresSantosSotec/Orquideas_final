@@ -15,9 +15,12 @@ class OrquideaController extends Controller
      */
     public function index()
     {
-        $orquideas = Orquidea::with(['grupo', 'clase'])->get();
-        return Inertia::render('registro_orquideas/index', [
+        $orquideas = Orquidea::with(['grupo', 'clase', 'participante'])->get();
+        $grupos = Grupo::all();
+
+        return Inertia::render('orquideas/Index', [
             'orquideas' => $orquideas,
+            'grupos' => $grupos,
         ]);
     }
 
@@ -28,10 +31,12 @@ class OrquideaController extends Controller
     {
         $grupos = Grupo::all();
         $clases = Clase::all();
+        $participantes = \App\Models\Participante::all();
 
-        return Inertia::render('registro_orquideas/Create', [
+        return Inertia::render('orquideas/Form', [
             'grupos' => $grupos,
             'clases' => $clases,
+            'participantes' => $participantes,
         ]);
     }
 
@@ -42,10 +47,17 @@ class OrquideaController extends Controller
     {
         $data = $request->validate([
             'nombre_planta' => ['required', 'string', 'max:255'],
-            'origen' => ['nullable', 'string', 'max:255'],
+            'origen' => ['required', 'string', 'max:255'],
             'id_grupo' => ['required', 'exists:tb_grupo,id_grupo'],
             'id_case' => ['required', 'exists:tb_clase,id_clase'],
+            'a' => ['required', 'exists:tb_participante,id'],
+            'foto' => ['nullable', 'image'],
         ]);
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('orquideas', 'public');
+            $data['foto'] = $path;
+        }
 
         $orquidea = Orquidea::create($data);
 
@@ -61,7 +73,11 @@ class OrquideaController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $orquidea = Orquidea::with(['grupo', 'clase', 'participante'])->findOrFail($id);
+
+        return Inertia::render('orquideas/Show', [
+            'orquidea' => $orquidea,
+        ]);
     }
 
     /**
@@ -69,7 +85,17 @@ class OrquideaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $orquidea = Orquidea::findOrFail($id);
+        $grupos = Grupo::all();
+        $clases = Clase::all();
+        $participantes = \App\Models\Participante::all();
+
+        return Inertia::render('orquideas/Form', [
+            'orquidea' => $orquidea,
+            'grupos' => $grupos,
+            'clases' => $clases,
+            'participantes' => $participantes,
+        ]);
     }
 
     /**
@@ -77,7 +103,25 @@ class OrquideaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $orquidea = Orquidea::findOrFail($id);
+
+        $data = $request->validate([
+            'nombre_planta' => ['required', 'string', 'max:255'],
+            'origen' => ['required', 'string', 'max:255'],
+            'id_grupo' => ['required', 'exists:tb_grupo,id_grupo'],
+            'id_case' => ['required', 'exists:tb_clase,id_clase'],
+            'a' => ['required', 'exists:tb_participante,id'],
+            'foto' => ['nullable', 'image'],
+        ]);
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('orquideas', 'public');
+            $data['foto'] = $path;
+        }
+
+        $orquidea->update($data);
+
+        return redirect()->route('orquideas.show', $orquidea);
     }
 
     /**
@@ -85,6 +129,9 @@ class OrquideaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $orquidea = Orquidea::findOrFail($id);
+        $orquidea->delete();
+
+        return redirect()->route('orquideas.index');
     }
 }

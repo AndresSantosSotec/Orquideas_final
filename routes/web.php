@@ -15,9 +15,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('registro_orquideas', [OrquideaController::class, 'index'])->name('orquideas.index');
-    Route::get('registro_orquideas/create', [OrquideaController::class, 'create'])->name('orquideas.create');
-    Route::post('registro_orquideas', [OrquideaController::class, 'store'])->name('orquideas.store');
+    Route::get('orquideas', [OrquideaController::class, 'index'])->name('orquideas.index');
+    Route::get('orquideas/create', [OrquideaController::class, 'create'])->name('orquideas.create');
+    Route::post('orquideas', [OrquideaController::class, 'store'])->name('orquideas.store');
+    Route::get('orquideas/{orquidea}', [OrquideaController::class, 'show'])->name('orquideas.show');
+    Route::get('orquideas/{orquidea}/edit', [OrquideaController::class, 'edit'])->name('orquideas.edit');
+    Route::put('orquideas/{orquidea}', [OrquideaController::class, 'update'])->name('orquideas.update');
+    Route::delete('orquideas/{orquidea}', [OrquideaController::class, 'destroy'])->name('orquideas.destroy');
 });
 
 require __DIR__.'/settings.php';
