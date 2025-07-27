@@ -49,6 +49,10 @@ class OrquideaController extends Controller
 
         Orquidea::create($data);
 
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Orquídea registrada'], 201);
+        }
+
         return redirect()->route('orquideas.index');
     }
 
