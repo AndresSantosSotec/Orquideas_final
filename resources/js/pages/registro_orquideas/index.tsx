@@ -1,7 +1,6 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Payment, columns } from "./Columns"
 import { DataTable } from "./data-table"
 import React from 'react';
@@ -28,51 +27,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "m5gr84i9",
-      amount: 316,
-      status: "success",
-      email: "ken99@example.com",
-    },
-    {
-      id: "3u1reuv4",
-      amount: 242,
-      status: "success",
-      email: "Abe45@example.com",
-    },
-    {
-      id: "derv1ws0",
-      amount: 837,
-      status: "processing",
-      email: "Monserrat44@example.com",
-    },
-    {
-      id: "5kma53ae",
-      amount: 874,
-      status: "success",
-      email: "Silas22@example.com",
-    },
-    {
-      id: "bhqecj4p",
-      amount: 721,
-      status: "failed",
-      email: "carmella@example.com",
-    },
-    
-    // ...
-  ]
-}
+export default function Dashboard({ orquideas = [] }: { orquideas: Payment[] }) {
 
-export default function Dashboard() {
-
-    const [data, setData] = React.useState<Payment[]>([]);
-
-    React.useEffect(() => {
-        getData().then((fetchedData) => setData(fetchedData));
-    }, []);
+    const [data, setData] = React.useState<Payment[]>(orquideas);
     
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -96,9 +53,11 @@ export default function Dashboard() {
               </Breadcrumb>
             </div>
               <div className='text-right'>
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  Nuevo Inventario
-                </Button>
+                <Link href={route('orquideas.create')}>
+                  <Button className="bg-blue-600 hover:bg-blue-700">
+                    Nueva Orquídea
+                  </Button>
+                </Link>
               </div>
               <div className="container mx-auto  ">
                 <DataTable columns={columns} data={data} />

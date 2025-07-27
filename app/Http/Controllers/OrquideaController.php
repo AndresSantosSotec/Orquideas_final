@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use App\Models\Orquidea;
+use App\Models\Grupo;
+use App\Models\Clase;
 
 class OrquideaController extends Controller
 {
@@ -11,7 +15,10 @@ class OrquideaController extends Controller
      */
     public function index()
     {
-        //
+        $orquideas = Orquidea::with(['grupo', 'clase'])->get();
+        return Inertia::render('registro_orquideas/index', [
+            'orquideas' => $orquideas,
+        ]);
     }
 
     /**
@@ -19,7 +26,13 @@ class OrquideaController extends Controller
      */
     public function create()
     {
-        //
+        $grupos = Grupo::all();
+        $clases = Clase::all();
+
+        return Inertia::render('registro_orquideas/Create', [
+            'grupos' => $grupos,
+            'clases' => $clases,
+        ]);
     }
 
     /**
@@ -27,7 +40,16 @@ class OrquideaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'nombre_planta' => ['required', 'string', 'max:255'],
+            'origen' => ['nullable', 'string', 'max:255'],
+            'id_grupo' => ['required', 'exists:tb_grupo,id_grupo'],
+            'id_case' => ['required', 'exists:tb_clase,id_clase'],
+        ]);
+
+        Orquidea::create($data);
+
+        return redirect()->route('orquideas.index');
     }
 
     /**
