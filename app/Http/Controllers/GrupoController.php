@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Grupo;
+use App\Models\Clase;
 
 class GrupoController extends Controller
 {
@@ -60,5 +62,19 @@ class GrupoController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Return data for dropdown selectors.
+     */
+    public function dropdownData()
+    {
+        $grupos = Grupo::select('id_grupo', 'nombre_grupo', 'Cod_Grupo')->get();
+        $clases = Clase::select('id_clase', 'nombre_clase', 'id_grupp')->get();
+
+        return response()->json([
+            'grupos' => $grupos,
+            'clases' => $clases,
+        ]);
     }
 }

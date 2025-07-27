@@ -47,7 +47,11 @@ class OrquideaController extends Controller
             'id_case' => ['required', 'exists:tb_clase,id_clase'],
         ]);
 
-        Orquidea::create($data);
+        $orquidea = Orquidea::create($data);
+
+        if ($request->wantsJson()) {
+            return response()->json($orquidea, 201);
+        }
 
         return redirect()->route('orquideas.index');
     }
