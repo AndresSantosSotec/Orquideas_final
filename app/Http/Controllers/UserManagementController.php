@@ -176,7 +176,7 @@ class UserManagementController extends Controller
         ]);
 
         $status = $user->email_verified_at ? 'verificado' : 'no verificado';
-        
+
         return redirect()->route('users.index')
             ->with('success', "Usuario marcado como {$status}.");
     }
